@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Agent : MonoBehaviour 
 {
-
+	public bool isSelected;
 	NavMeshAgent agent;
+	public Vector3 oldPos;
 
 	// Use this for initialization
 	void Start ()
@@ -15,15 +16,40 @@ public class Agent : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetMouseButton(0)) 
+		if (isSelected) 
 		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 100))
+			if (Input.GetMouseButton(0)) 
 			{
-				Debug.DrawLine(ray.origin, hit.point);
-				agent.SetDestination(hit.point);
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast(ray, out hit, 100))
+				{
+					Debug.DrawLine(ray.origin, hit.point);
+					agent.SetDestination(hit.point);
+				}
 			}
 		}
 	}
+
+	public void TemporaryDestination(Vector3 newPos)
+	{
+		oldPos = agent.destination;
+		agent.SetDestination (newPos);
+	}
+
+	public void ResumeOldPath()
+	{
+		agent.SetDestination (oldPos);
+		oldPos = Vector3.zero;
+	}
+
+//	void OnTriggerEnter(Collider other)
+//	{
+//		print("Collision detected");
+//		if (other.tag == "Crosswalk") 
+//		{
+//			print("Crosswalk detected");
+//			Destroy(this.gameObject);
+//		}
+//	}
 }
