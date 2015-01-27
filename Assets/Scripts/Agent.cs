@@ -4,28 +4,32 @@ using System.Collections;
 public class Agent : MonoBehaviour 
 {
 	public bool isSelected;
+	//public bool canReceivePath;
 	NavMeshAgent agent;
 	public Vector3 oldPos;
 
-	// Use this for initialization
 	void Start ()
 	{
-		agent = gameObject.GetComponent<NavMeshAgent> ();
+		agent = gameObject.GetComponent<NavMeshAgent>();
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
+//		if (canReceivePath) 
+//		{
+//
+//		}
 		if (isSelected) 
 		{
 			if (Input.GetMouseButton(0)) 
 			{
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit, 100))
+				if (Physics.Raycast(ray, out hit, 300))
 				{
 					Debug.DrawLine(ray.origin, hit.point);
 					agent.SetDestination(hit.point);
+					oldPos = hit.point;
 				}
 			}
 		}
@@ -39,8 +43,13 @@ public class Agent : MonoBehaviour
 
 	public void ResumeOldPath()
 	{
-		agent.SetDestination (oldPos);
-		oldPos = Vector3.zero;
+		if (oldPos != Vector3.zero) 
+		{
+			agent.SetDestination (oldPos);
+			oldPos = Vector3.zero;
+		}
+
+
 	}
 
 //	void OnTriggerEnter(Collider other)
