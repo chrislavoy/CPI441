@@ -4,21 +4,22 @@ using System.Collections;
 public class Agent : MonoBehaviour 
 {
 	public bool isSelected;
-	//public bool canReceivePath;
 	NavMeshAgent agent;
+	WaypointManager wpm;
 	public Vector3 oldPos;
+	public Vector3 endPos;
 
 	void Start ()
 	{
 		agent = gameObject.GetComponent<NavMeshAgent>();
+		StartCoroutine ("CheckIfAtDestination");
+		wpm = Component.FindObjectOfType<WaypointManager>();
+		endPos = agent.destination;
+		GetNewDestination();
 	}
 
 	void Update () 
 	{
-//		if (canReceivePath) 
-//		{
-//
-//		}
 		if (isSelected) 
 		{
 			if (Input.GetMouseButton(0)) 
@@ -29,7 +30,7 @@ public class Agent : MonoBehaviour
 				{
 					Debug.DrawLine(ray.origin, hit.point);
 					agent.SetDestination(hit.point);
-					oldPos = hit.point;
+					endPos = hit.point;
 				}
 			}
 		}
@@ -38,7 +39,6 @@ public class Agent : MonoBehaviour
 	public void TemporaryDestination(Vector3 newPos)
 	{
 		oldPos = agent.destination;
-		agent.SetDestination (newPos);
 	}
 
 	public void ResumeOldPath()
@@ -48,17 +48,27 @@ public class Agent : MonoBehaviour
 			agent.SetDestination (oldPos);
 			oldPos = Vector3.zero;
 		}
-
-
+		else 
+		{
+			agent.SetDestination(endPos);
+		}
 	}
 
-//	void OnTriggerEnter(Collider other)
-//	{
-//		print("Collision detected");
-//		if (other.tag == "Crosswalk") 
-//		{
-//			print("Crosswalk detected");
-//			Destroy(this.gameObject);
-//		}
-//	}
+	IEnumerator CheckIfAtDestination()
+	{
+		while(Vector3.Distance(transform.position, endPos) >= 15.0f) 
+		{
+			yield return new WaitForSeconds (1);
+		}
+
+		GetNewDestination();
+		StartCoroutine("CheckIfAtDestination");
+	}
+
+	void GetNewDestination()
+	{
+		agent.SetDestination(wpm.AssignNewDestination());
+		endPos = agent.destination;
+		oldPos = Vector3.zero;
+	}
 }

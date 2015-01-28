@@ -5,17 +5,16 @@ public class PedestrianTest : MonoBehaviour
 {
 	public int numberOfPedestrians;
 	public float secondsToWait;
-	public GameObject start, stop;
 	public GameObject person;
 	public int count;
-
-	// Use this for initialization
+	public GameObject parent;
+	public WaypointManager wpm;
+	
 	void Start () 
 	{
 		StartCoroutine("SpawnPeople");
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
 		if (Input.GetKeyDown(KeyCode.Space)) 
@@ -28,8 +27,9 @@ public class PedestrianTest : MonoBehaviour
 	{
 		for (int i = 0; i < numberOfPedestrians; i++) 
 		{
-			GameObject clone = (GameObject)Instantiate(person, start.transform.position, Quaternion.identity);
-			clone.GetComponent<NavMeshAgent>().SetDestination(stop.transform.position);
+			Vector3 tempPos = wpm.AssignNewDestination();
+			GameObject clone = (GameObject)Instantiate(person, tempPos, Quaternion.identity);
+			clone.transform.parent = parent.transform;
 			yield return new WaitForSeconds(secondsToWait);
 			count++;
 		}
