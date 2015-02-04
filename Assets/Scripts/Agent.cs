@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Agent : MonoBehaviour 
 {
-	public bool isSelected;
+	//public bool isSelected;
 	NavMeshAgent agent;
 	WaypointManager wpm;
-	public Vector3 oldPos;
+	//public Vector3 oldPos;
 	public Vector3 endPos;
 
 	void Start ()
@@ -20,37 +20,44 @@ public class Agent : MonoBehaviour
 
 	void Update () 
 	{
-		if (isSelected) 
+//		if (isSelected) 
+//		{
+//			if (Input.GetMouseButton(0)) 
+//			{
+//				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//				RaycastHit hit;
+//				if (Physics.Raycast(ray, out hit, 300))
+//				{
+//					Debug.DrawLine(ray.origin, hit.point);
+//					agent.SetDestination(hit.point);
+//					endPos = hit.point;
+//				}
+//			}
+//		}
+
+		if (rigidbody.velocity == Vector3.zero && Vector3.Distance(transform.position, endPos) >= 15.0f) 
 		{
-			if (Input.GetMouseButton(0)) 
-			{
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit, 300))
-				{
-					Debug.DrawLine(ray.origin, hit.point);
-					agent.SetDestination(hit.point);
-					endPos = hit.point;
-				}
-			}
+
 		}
 	}
 
 	public void TemporaryDestination(Vector3 newPos)
 	{
-		oldPos = agent.destination;
+		endPos = agent.destination;
+		agent.SetDestination (newPos);
 	}
 
 	public void ResumeOldPath()
 	{
-		if (oldPos != Vector3.zero) 
+		if (endPos != Vector3.zero) 
 		{
-			agent.SetDestination (oldPos);
-			oldPos = Vector3.zero;
+			agent.SetDestination (endPos);
+			endPos = Vector3.zero;
 		}
 		else 
 		{
-			agent.SetDestination(endPos);
+			//agent.SetDestination(endPos);
+			agent.SetDestination(wpm.AssignNewDestination());
 		}
 	}
 
@@ -69,6 +76,6 @@ public class Agent : MonoBehaviour
 	{
 		agent.SetDestination(wpm.AssignNewDestination());
 		endPos = agent.destination;
-		oldPos = Vector3.zero;
+		//oldPos = Vector3.zero;
 	}
 }

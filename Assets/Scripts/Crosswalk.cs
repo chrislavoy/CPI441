@@ -2,27 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent (typeof (BoxCollider))]
+
 public class Crosswalk : MonoBehaviour 
 {
 	public Vector3 allowedVector;
 	public bool crossAllowed;
 	public List<GameObject> waiting;
-	public Vector3 endPos1, endpos2;
+	public Vector3 endPos1, endPos2;
 	public float timer;
-
+	private GameObject parent;
 
 	void Start () 
 	{
-		if (transform.eulerAngles == new Vector3(0, 270, 0))
+		parent = this.transform.parent.gameObject;
+		this.GetComponent<BoxCollider> ().transform.position = this.transform.position + new Vector3 (0, 2, 0);
+
+//		if (transform.eulerAngles == new Vector3(0, 270, 0))
+//		{
+//			endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - (transform.localScale.x / 2) - 0.5f);
+//			endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + transform.localScale.x  + 0.5f);
+//		}
+//		else 
+//		{
+//			endPos1 = new Vector3(transform.position.x - (transform.localScale.x / 2) - 0.5f, transform.position.y, transform.position.z);
+//			endPos2 = new Vector3 (endPos1.x + transform.localScale.x  + 0.5f, endPos1.y, endPos1.z);
+//		}
+		if (parent.transform.localScale.x > parent.transform.localScale.z) 
 		{
-			endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - (transform.localScale.x / 2) - 0.5f);
-			endpos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + transform.localScale.x  + 0.5f);
+			endPos1 = new Vector3(parent.transform.position.x - (parent.transform.localScale.x / 2) - 0.5f, parent.transform.position.y, parent.transform.position.z);
+			endPos2 = new Vector3 (endPos1.x + parent.transform.localScale.x  + 0.5f, endPos1.y, endPos1.z);
 		}
 		else 
 		{
-			endPos1 = new Vector3(transform.position.x - (transform.localScale.x / 2) - 0.5f, transform.position.y, transform.position.z);
-			endpos2 = new Vector3 (endPos1.x + transform.localScale.x  + 0.5f, endPos1.y, endPos1.z);
+			endPos1 = new Vector3(parent.transform.position.x, parent.transform.position.y, parent.transform.position.z - (parent.transform.localScale.z / 2) - 0.5f);
+			endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + parent.transform.localScale.z  + 0.5f);
 		}
+
 		waiting = new List<GameObject>();
 	}
 
@@ -66,9 +82,9 @@ public class Crosswalk : MonoBehaviour
 	Vector3 FindClosestNode(Vector3 otherPos)
 	{
 		float distance1 = Vector3.Distance(otherPos, endPos1);
-		float distance2 = Vector3.Distance(otherPos, endpos2);
+		float distance2 = Vector3.Distance(otherPos, endPos2);
 		
-		return (distance1 > distance2) ? endpos2 : endPos1;
+		return (distance1 > distance2) ? endPos2 : endPos1;
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -90,6 +106,17 @@ public class Crosswalk : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-
+		Gizmos.color = Color.red;
+		Gizmos.DrawSphere (endPos1, 1);
+		Gizmos.DrawSphere (endPos2, 1);
 	}
+
+//	void Initialize()
+//	{
+//		//parent = gameObject.transform.parent.gameObject;
+//		//this.transform.localScale = gameObject.transform.parent.gameObject.transform.localScale;
+//		//this.transform.position = new Vector3 (0, 2, 0);
+//
+//		this.GetComponent<BoxCollider> ().transform.position = this.transform.position + new Vector3 (0, 2, 0);
+//	}
 }
