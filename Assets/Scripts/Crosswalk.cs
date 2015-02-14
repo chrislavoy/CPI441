@@ -10,13 +10,26 @@ public class Crosswalk : MonoBehaviour
 	public bool crossAllowed;
 	public List<GameObject> waiting;
 	public Vector3 endPos1, endPos2;
-	public float timer;
+	//public float timer;
 	private GameObject parent;
+	public bool isChild;
+	private float scaler;
+	public bool flipEndPoints;
 
 	void Start () 
 	{
 		parent = this.transform.parent.gameObject;
-		this.GetComponent<BoxCollider> ().transform.position = this.transform.position + new Vector3 (0, 2, 0);
+
+		if (isChild) 
+		{
+			scaler = parent.transform.localScale.x;
+		}
+		else 
+		{
+			scaler = 1;
+		}
+
+		//this.GetComponent<BoxCollider>().transform.position = this.transform.position + new Vector3 (0, 2, 0);
 
 //		if (transform.eulerAngles == new Vector3(0, 270, 0))
 //		{
@@ -28,18 +41,53 @@ public class Crosswalk : MonoBehaviour
 //			endPos1 = new Vector3(transform.position.x - (transform.localScale.x / 2) - 0.5f, transform.position.y, transform.position.z);
 //			endPos2 = new Vector3 (endPos1.x + transform.localScale.x  + 0.5f, endPos1.y, endPos1.z);
 //		}
-		if (parent.transform.localScale.x > parent.transform.localScale.z) 
+//		if (parent.transform.localScale.x > parent.transform.localScale.z) 
+//		{
+//			endPos1 = new Vector3(parent.transform.position.x - ((parent.transform.localScale.x * scaler) / 2) - 0.5f, parent.transform.position.y, parent.transform.position.z);
+//			endPos2 = new Vector3 (endPos1.x + (parent.transform.localScale.x * scaler)  + 0.5f, endPos1.y, endPos1.z);
+//		}
+//		else 
+//		{
+//			endPos1 = new Vector3(parent.transform.position.x, parent.transform.position.y, parent.transform.position.z - ((parent.transform.localScale.z * scaler) / 2) - 0.5f);
+//			endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (parent.transform.localScale.z * scaler)  + 0.5f);
+//		}
+
+		CreateEndPos ();
+
+		waiting = new List<GameObject>();
+	}
+
+	void CreateEndPos()
+	{
+		if (!flipEndPoints) 
 		{
-			endPos1 = new Vector3(parent.transform.position.x - (parent.transform.localScale.x / 2) - 0.5f, parent.transform.position.y, parent.transform.position.z);
-			endPos2 = new Vector3 (endPos1.x + parent.transform.localScale.x  + 0.5f, endPos1.y, endPos1.z);
+			if (transform.localScale.x > transform.localScale.z) 
+			{
+				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 1, transform.position.y, transform.position.z);
+				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 2, endPos1.y, endPos1.z);
+			}
+			else 
+			{
+				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 1);
+				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 2);
+			}
 		}
 		else 
 		{
-			endPos1 = new Vector3(parent.transform.position.x, parent.transform.position.y, parent.transform.position.z - (parent.transform.localScale.z / 2) - 0.5f);
-			endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + parent.transform.localScale.z  + 0.5f);
+			if (transform.localScale.x > transform.localScale.z) 
+			{
+				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 1);
+				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 2);
+			}
+			else 
+			{
+				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 1, transform.position.y, transform.position.z);
+				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 2, endPos1.y, endPos1.z);
+			}
 		}
 
-		waiting = new List<GameObject>();
+		endPos1 += new Vector3 (0, 1, 0);
+		endPos2 += new Vector3 (0, 1, 0);
 	}
 
 	void Update () 
@@ -56,15 +104,15 @@ public class Crosswalk : MonoBehaviour
 			}
 		}
 
-		if (timer <= 0)
-		{
-			change();
-			timer = 10;
-		}
-		else 
-		{
-			timer -= Time.deltaTime;
-		}
+//		if (timer <= 0)
+//		{
+//			change();
+//			timer = 10;
+//		}
+//		else 
+//		{
+//			timer -= Time.deltaTime;
+//		}
 	}
 
 	public void change()
@@ -96,7 +144,7 @@ public class Crosswalk : MonoBehaviour
 				waiting.Add(other.gameObject);
 				other.SendMessage("TemporaryDestination", FindClosestNode(other.transform.position));
 			}
-			else if (crossAllowed && timer <= 5.0f) 
+			else /*if (crossAllowed && timer <= 5.0f) */
 			{
 				waiting.Add(other.gameObject);
 				other.SendMessage("TemporaryDestination", FindClosestNode(other.transform.position));
@@ -108,6 +156,7 @@ public class Crosswalk : MonoBehaviour
 	{
 		Gizmos.color = Color.red;
 		Gizmos.DrawSphere (endPos1, 1);
+		Gizmos.color = Color.blue;
 		Gizmos.DrawSphere (endPos2, 1);
 	}
 
