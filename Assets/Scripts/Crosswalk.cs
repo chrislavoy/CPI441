@@ -63,26 +63,26 @@ public class Crosswalk : MonoBehaviour
 		{
 			if (transform.localScale.x > transform.localScale.z) 
 			{
-				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 1, transform.position.y, transform.position.z);
-				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 2, endPos1.y, endPos1.z);
+				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 4, transform.position.y, transform.position.z);
+				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 10, endPos1.y, endPos1.z);
 			}
 			else 
 			{
-				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 1);
-				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 2);
+				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 4);
+				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 10);
 			}
 		}
 		else 
 		{
 			if (transform.localScale.x > transform.localScale.z) 
 			{
-				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 1);
-				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 2);
+				endPos1 = new Vector3(transform.position.x, transform.position.y, transform.position.z - ((transform.localScale.z * scaler) / 2) - 4);
+				endPos2 = new Vector3 (endPos1.x, endPos1.y, endPos1.z + (transform.localScale.z * scaler)  + 10);
 			}
 			else 
 			{
-				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 1, transform.position.y, transform.position.z);
-				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 2, endPos1.y, endPos1.z);
+				endPos1 = new Vector3(transform.position.x - ((transform.localScale.x * scaler) / 2) - 4, transform.position.y, transform.position.z);
+				endPos2 = new Vector3 (endPos1.x + (transform.localScale.x * scaler)  + 10, endPos1.y, endPos1.z);
 			}
 		}
 
@@ -99,6 +99,7 @@ public class Crosswalk : MonoBehaviour
 				foreach (GameObject w in waiting) 
 				{
 					w.SendMessage("ResumeOldPath");
+					//waiting.Remove(w);
 				}
 				waiting.Clear();
 			}

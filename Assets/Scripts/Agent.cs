@@ -12,7 +12,7 @@ public class Agent : MonoBehaviour
 	void Start ()
 	{
 		agent = gameObject.GetComponent<NavMeshAgent>();
-		StartCoroutine ("CheckIfAtDestination");
+		//StartCoroutine ("CheckIfAtDestination");
 		wpm = Component.FindObjectOfType<WaypointManager>();
 		endPos = agent.destination;
 		GetNewDestination();
@@ -35,16 +35,18 @@ public class Agent : MonoBehaviour
 //			}
 //		}
 
-		if (rigidbody.velocity == Vector3.zero && Vector3.Distance(transform.position, endPos) >= 15.0f) 
-		{
+		CheckIfAtDestination();
 
-		}
+//		if (rigidbody.velocity == Vector3.zero && Vector3.Distance(transform.position, endPos) >= 15.0f) 
+//		{
+//
+//		}
 	}
 
 	public void TemporaryDestination(Vector3 newPos)
 	{
 		endPos = agent.destination;
-		agent.SetDestination (newPos);
+		agent.SetDestination(newPos);
 	}
 
 	public void ResumeOldPath()
@@ -52,7 +54,7 @@ public class Agent : MonoBehaviour
 		if (endPos != Vector3.zero) 
 		{
 			agent.SetDestination (endPos);
-			endPos = Vector3.zero;
+			//endPos = Vector3.zero;
 		}
 		else 
 		{
@@ -61,19 +63,29 @@ public class Agent : MonoBehaviour
 		}
 	}
 
-	IEnumerator CheckIfAtDestination()
-	{
-		while(Vector3.Distance(transform.position, endPos) >= 15.0f) 
-		{
-			yield return new WaitForSeconds (1);
-		}
+//	IEnumerator CheckIfAtDestination()
+//	{
+//		while(Vector3.Distance(transform.position, endPos) >= 5.0f) 
+//		{
+//			yield return new WaitForSeconds (1);
+//		}
+//
+//		GetNewDestination();
+//		//StartCoroutine("CheckIfAtDestination");
+//		//Destroy(this.gameObject);
+//	}
 
-		GetNewDestination();
-		StartCoroutine("CheckIfAtDestination");
+	void CheckIfAtDestination()
+	{
+		if (Vector3.Distance(transform.position, endPos) <= 5.0f) 
+		{
+			GetNewDestination();
+		}
 	}
 
 	void GetNewDestination()
 	{
+		//print(this.GetInstanceID() + "Getting new destination");
 		agent.SetDestination(wpm.AssignNewDestination());
 		endPos = agent.destination;
 		//oldPos = Vector3.zero;
