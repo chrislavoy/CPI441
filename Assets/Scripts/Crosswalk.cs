@@ -29,6 +29,15 @@ public class Crosswalk : MonoBehaviour
 			scaler = 1;
 		}
 
+		if (crossAllowed) 
+		{
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+		}
+		else 
+		{
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+		}
+	
 		//this.GetComponent<BoxCollider>().transform.position = this.transform.position + new Vector3 (0, 2, 0);
 
 //		if (transform.eulerAngles == new Vector3(0, 270, 0))
@@ -121,10 +130,12 @@ public class Crosswalk : MonoBehaviour
 		if (crossAllowed)
 		{
 			crossAllowed = false;
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
 		}
 		else 
 		{
 			crossAllowed = true;
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
 		}
 	}
 

@@ -30,14 +30,14 @@ public class Intersection : MonoBehaviour
 		directionTwoCrosswalks.Add (leftCrosswalk);
 		directionTwoCrosswalks.Add (rightCrosswalk);
 		directionOneAllowed = true;
-		foreach (GameObject cw in directionOneCrosswalks) 
-		{
-			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
-		}
-		foreach (GameObject cw in directionTwoCrosswalks) 
-		{
-			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
-		}
+//		foreach (GameObject cw in directionOneCrosswalks) 
+//		{
+//			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+//		}
+//		foreach (GameObject cw in directionTwoCrosswalks) 
+//		{
+//			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+//		}
 	}
 
 	void Update() 
@@ -73,12 +73,12 @@ public class Intersection : MonoBehaviour
 		foreach (GameObject cw in directionOneCrosswalks) 
 		{
 			cw.GetComponent<Crosswalk>().crossAllowed = false;
-			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+//			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
 		}
 		foreach (GameObject cw in directionTwoCrosswalks) 
 		{
 			cw.GetComponent<Crosswalk>().crossAllowed = false;
-			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+//			cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
 		}
 	}
 
@@ -90,13 +90,13 @@ public class Intersection : MonoBehaviour
 			{
 				cw.GetComponent<Crosswalk>().crossAllowed = false;
 				//cw.gameObject.renderer.material.color = Color.red;
-				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+//				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
 			}
 			foreach (GameObject cw in directionTwoCrosswalks) 
 			{
 				cw.GetComponent<Crosswalk>().crossAllowed = true;
 				//cw.gameObject.renderer.material.color = Color.green;
-				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+//				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
 			}
 			directionOneAllowed = false;
 		}
@@ -106,13 +106,13 @@ public class Intersection : MonoBehaviour
 			{
 				cw.GetComponent<Crosswalk>().crossAllowed = true;
 				//cw.gameObject.renderer.material.color = Color.green;
-				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+//				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
 			}
 			foreach (GameObject cw in directionTwoCrosswalks) 
 			{
 				cw.GetComponent<Crosswalk>().crossAllowed = false;
 				//cw.gameObject.renderer.material.color = Color.red;
-				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+//				cw.gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
 			}
 			directionOneAllowed = true;
 		}
