@@ -29,7 +29,7 @@ public class Crosswalk : MonoBehaviour
 			scaler = 1;
 		}
 
-		if (crossAllowed) 
+		if (!crossAllowed) 
 		{
 			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
 		}
@@ -112,6 +112,15 @@ public class Crosswalk : MonoBehaviour
 				}
 				waiting.Clear();
 			}
+		}
+
+		if (!crossAllowed)
+		{
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+		}
+		else 
+		{
+			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
 		}
 
 //		if (timer <= 0)
