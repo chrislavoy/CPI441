@@ -47,7 +47,7 @@ public class TimeOfDay : MonoBehaviour
 	/// <summary>
 	/// The current 'phase' of the day; Dawn, Day, Dusk, or Night
 	/// </summary>
-	public DayPhase currentPhase;
+	private DayPhase currentPhase;
 	
 	/// <summary>
 	/// The number of hours per day used in the WorldHour time calculation.
@@ -153,6 +153,24 @@ public class TimeOfDay : MonoBehaviour
 		nightTime = duskTime + quarterDay;
 		if (light != null)
 		{ lightIntensity = light.intensity; }
+		transform.Rotate(Vector3.right * ((currentCycleTime / dayCycleLength) * 360.0f), Space.Self);
+
+		if (currentCycleTime >= nightTime) 
+		{
+			SetNight();
+		}
+		else if (currentCycleTime >=dawnTime) 
+		{
+			SetDawn();
+		}
+		else if (currentCycleTime >= dayTime)
+		{
+			SetDay();
+		}
+		else 
+		{
+			SetDusk();
+		}
 	}
 	
 	/// <summary>
