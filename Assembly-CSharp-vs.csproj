@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Intersection.cs" />
      <Compile Include="Assets\Scripts\PedestrianTest.cs" />
      <Compile Include="Assets\Scripts\TimeOfDay.cs" />
+     <Compile Include="Assets\Scripts\TimeOfDaySystem.cs" />
      <Compile Include="Assets\Scripts\WaypointManager.cs" />
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
  <Reference Include="Assembly-UnityScript-firstpass">
