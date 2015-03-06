@@ -40,6 +40,7 @@ public class TimeOfDaySystem : MonoBehaviour
 	/// <summary>
 	/// The current time within the day cycle. Modify to change the World Time.
 	/// </summary>
+	[Range(0.0f, 1440.0f)] // Change second value to match Day Cycle Length in editor
 	public float currentCycleTime;
 	
 	//Would be the amount of time the sky takes to transition if UpdateSkybox were used.
@@ -48,7 +49,7 @@ public class TimeOfDaySystem : MonoBehaviour
 	/// <summary>
 	/// The current 'phase' of the day; Dawn, Day, Dusk, or Night
 	/// </summary>
-	public DayPhase currentPhase;
+	private DayPhase currentPhase;
 	
 	/// <summary>
 	/// The number of hours per day used in the WorldHour time calculation.
@@ -153,7 +154,7 @@ public class TimeOfDaySystem : MonoBehaviour
 		duskTime = dayTime + quarterDay;
 		nightTime = duskTime + quarterDay;
 		if (light != null)
-		{ lightIntensity = light.intensity; }
+		{ lightIntensity = 0.33f; } // Changed intensity to be set by hand
 		transform.Rotate(Vector3.right * ((currentCycleTime / dayCycleLength) * 360.0f), Space.Self);
 
 //		if (currentCycleTime > nightTime) 
@@ -171,6 +172,11 @@ public class TimeOfDaySystem : MonoBehaviour
 //		else 
 //		{
 //			SetDusk();
+//		}
+
+//		if (currentCycleTime ) 
+//		{
+//
 //		}
 	}
 	
@@ -210,19 +216,36 @@ public class TimeOfDaySystem : MonoBehaviour
 	void Update()
 	{
 		// Rudementary phase-check algorithm:
-		if (currentCycleTime > nightTime && currentPhase == DayPhase.Dusk)
+//		if (currentCycleTime > nightTime && currentPhase == DayPhase.Dusk)
+//		{
+//			SetNight();
+//		}
+//		else if (currentCycleTime > duskTime && currentPhase == DayPhase.Day)
+//		{
+//			SetDusk();
+//		}
+//		else if (currentCycleTime > dayTime && currentPhase == DayPhase.Dawn)
+//		{
+//			SetDay();
+//		}
+//		else if (currentCycleTime > dawnTime && currentCycleTime < dayTime && currentPhase == DayPhase.Night)
+//		{
+//			SetDawn();
+//		}
+
+		if (currentCycleTime > nightTime)
 		{
 			SetNight();
 		}
-		else if (currentCycleTime > duskTime && currentPhase == DayPhase.Day)
+		else if (currentCycleTime > duskTime)
 		{
 			SetDusk();
 		}
-		else if (currentCycleTime > dayTime && currentPhase == DayPhase.Dawn)
+		else if (currentCycleTime > dayTime)
 		{
 			SetDay();
 		}
-		else if (currentCycleTime > dawnTime && currentCycleTime < dayTime && currentPhase == DayPhase.Night)
+		else if (currentCycleTime > dawnTime && currentCycleTime < dayTime)
 		{
 			SetDawn();
 		}
@@ -303,6 +326,14 @@ public class TimeOfDaySystem : MonoBehaviour
 			if (light != null)
 			{ light.intensity = lightIntensity * (relativeTime / quarterDay); }
 		}
+		else if(currentPhase == DayPhase.Day)
+		{
+			//float relativeTime = currentCycleTime - dayTime;
+			RenderSettings.ambientLight = fullLight;
+			if (light != null)
+			{ light.intensity = lightIntensity; }
+		}
+
 		else if (currentPhase == DayPhase.Dusk)
 		{
 			float relativeTime = currentCycleTime - duskTime;
@@ -310,7 +341,14 @@ public class TimeOfDaySystem : MonoBehaviour
 			if (light != null)
 			{ light.intensity = lightIntensity * ((quarterDay - relativeTime) / quarterDay); }
 		}
-		
+		else if (currentPhase == DayPhase.Night) 
+		{
+			//float relativeTime = currentCycleTime - nightTime;
+			RenderSettings.ambientLight = fullDark;
+			if (light != null)
+			{ light.intensity = 0.0f; }
+		}
+
 		transform.Rotate(Vector3.right * ((Time.deltaTime / dayCycleLength) * 360.0f), Space.Self);
 	}
 	
