@@ -31,11 +31,11 @@ public class Crosswalk : MonoBehaviour
 
 		if (!crossAllowed) 
 		{
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.green;
 		}
 		else 
 		{
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.red;
 		}
 	
 		//this.GetComponent<BoxCollider>().transform.position = this.transform.position + new Vector3 (0, 2, 0);
@@ -116,11 +116,11 @@ public class Crosswalk : MonoBehaviour
 
 		if (!crossAllowed)
 		{
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.red;
 		}
 		else 
 		{
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.green;
 		}
 
 //		if (timer <= 0)
@@ -139,12 +139,12 @@ public class Crosswalk : MonoBehaviour
 		if (crossAllowed)
 		{
 			crossAllowed = false;
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.red;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.red;
 		}
 		else 
 		{
 			crossAllowed = true;
-			gameObject.GetComponentInChildren<Renderer>().renderer.material.color = Color.green;
+			gameObject.GetComponentInChildren<Renderer>().GetComponent<Renderer>().material.color = Color.green;
 		}
 	}
 
