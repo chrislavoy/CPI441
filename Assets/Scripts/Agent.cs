@@ -3,91 +3,72 @@ using System.Collections;
 
 public class Agent : MonoBehaviour 
 {
-	//public bool isSelected;
+	public bool isSelected;
+	//public bool canReceivePath;
 	NavMeshAgent agent;
-	WaypointManager wpm;
-	//public Vector3 oldPos;
-	public Vector3 endPos;
-
+	public Vector3 oldPos;
+	TimeOfDaySystem time;
+	PedestrianTest test;
+	public float timeOfDay;
+	
 	void Start ()
 	{
 		agent = gameObject.GetComponent<NavMeshAgent>();
-		//StartCoroutine ("CheckIfAtDestination");
-		wpm = Component.FindObjectOfType<WaypointManager>();
-		endPos = agent.destination;
-		GetNewDestination();
+		time = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TimeOfDaySystem>();
+		test = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<PedestrianTest>();
+		timeOfDay = 0;
 	}
-
-	void Update () 
+	
+	void FixedUpdate () 
 	{
-//		if (isSelected) 
-//		{
-//			if (Input.GetMouseButton(0)) 
-//			{
-//				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-//				RaycastHit hit;
-//				if (Physics.Raycast(ray, out hit, 300))
-//				{
-//					Debug.DrawLine(ray.origin, hit.point);
-//					agent.SetDestination(hit.point);
-//					endPos = hit.point;
-//				}
-//			}
-//		}
+		//		if (canReceivePath) 
+		//		{
+		//
+		//		}
+		timeOfDay = time.currentCycleTime;
+		if ((time.worldTimeHour >= 18) && (time.worldTimeHour <= 22)) {
+			GameObject gameTime;
+			gameTime = GameObject.FindGameObjectWithTag ("Stadium");
+			TemporaryDestination (gameTime.transform.position);
 
-		CheckIfAtDestination();
+		} else {
 
-//		if (rigidbody.velocity == Vector3.zero && Vector3.Distance(transform.position, endPos) >= 15.0f) 
-//		{
-//
-//		}
+			ResumeOldPath();
+		}
+		if (isSelected) 
+		{
+			if (Input.GetMouseButton(0)) 
+			{
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast(ray, out hit, 300))
+				{
+					Debug.DrawLine(ray.origin, hit.point);
+					agent.SetDestination(hit.point);
+					oldPos = hit.point;
+				}
+			}
+		}
+
 	}
-
+	
 	public void TemporaryDestination(Vector3 newPos)
 	{
-		endPos = agent.destination;
-		agent.SetDestination(newPos);
+		oldPos = agent.destination;
+		agent.SetDestination (newPos);
 	}
-
+	
 	public void ResumeOldPath()
 	{
-		if (endPos != Vector3.zero) 
+		if (oldPos != Vector3.zero) 
 		{
-			agent.SetDestination (endPos);
-			//endPos = Vector3.zero;
-		}
-		else 
-		{
-			//agent.SetDestination(endPos);
-			agent.SetDestination(wpm.AssignNewDestination());
-		}
-	}
-
-//	IEnumerator CheckIfAtDestination()
-//	{
-//		while(Vector3.Distance(transform.position, endPos) >= 5.0f) 
-//		{
-//			yield return new WaitForSeconds (1);
-//		}
-//
-//		GetNewDestination();
-//		//StartCoroutine("CheckIfAtDestination");
-//		//Destroy(this.gameObject);
-//	}
-
-	void CheckIfAtDestination()
-	{
-		if (Vector3.Distance(transform.position, endPos) <= 5.0f) 
-		{
-			GetNewDestination();
-		}
-	}
-
-	void GetNewDestination()
-	{
-		//print(this.GetInstanceID() + "Getting new destination");
-		agent.SetDestination(wpm.AssignNewDestination());
-		endPos = agent.destination;
-		//oldPos = Vector3.zero;
+						agent.SetDestination (oldPos);
+						oldPos = Vector3.zero;
+				} 
+		else {
+			agent.SetDestination(test.stop[(int)Random.Range(0,test.stop.Length)].transform.position);
+				}
+		
+		
 	}
 }
