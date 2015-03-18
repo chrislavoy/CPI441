@@ -153,7 +153,7 @@ public class TimeOfDaySystem : MonoBehaviour
 		dayTime = dawnTime + quarterDay;
 		duskTime = dayTime + quarterDay;
 		nightTime = duskTime + quarterDay;
-		if (light != null)
+		if (GetComponent<Light>() != null)
 		{ lightIntensity = 0.33f; } // Changed intensity to be set by hand
 		transform.Rotate(Vector3.right * ((currentCycleTime / dayCycleLength) * 360.0f), Space.Self);
 
@@ -268,8 +268,8 @@ public class TimeOfDaySystem : MonoBehaviour
 	{
 		RenderSettings.skybox = dawnDuskSkybox; //would be commented out or removed if UpdateSkybox were used.
 		//remainingTransition = skyTransitionTime; //would be set if UpdateSkybox were used.
-		if (light != null)
-		{ light.enabled = true; }
+		if (GetComponent<Light>() != null)
+		{ GetComponent<Light>().enabled = true; }
 		currentPhase = DayPhase.Dawn;
 	}
 	
@@ -282,8 +282,8 @@ public class TimeOfDaySystem : MonoBehaviour
 		RenderSettings.skybox = daySkybox; //would be commented out or removed if UpdateSkybox were used.
 		//remainingTransition = skyTransitionTime; //would be set if UpdateSkybox were used.
 		RenderSettings.ambientLight = fullLight;
-		if (light != null)
-		{ light.intensity = lightIntensity; }
+		if (GetComponent<Light>() != null)
+		{ GetComponent<Light>().intensity = lightIntensity; }
 		currentPhase = DayPhase.Day;
 	}
 	
@@ -306,8 +306,8 @@ public class TimeOfDaySystem : MonoBehaviour
 		RenderSettings.skybox = nightSkybox; //would be commented out or removed if UpdateSkybox were used.
 		//remainingTransition = skyTransitionTime; //would be set if UpdateSkybox were used.
 		RenderSettings.ambientLight = fullDark;
-		if (light != null)
-		{ light.enabled = false; }
+		if (GetComponent<Light>() != null)
+		{ GetComponent<Light>().enabled = false; }
 		currentPhase = DayPhase.Night;
 	}
 	
@@ -323,30 +323,30 @@ public class TimeOfDaySystem : MonoBehaviour
 		{
 			float relativeTime = currentCycleTime - dawnTime;
 			RenderSettings.ambientLight = Color.Lerp(fullDark, fullLight, relativeTime / quarterDay);
-			if (light != null)
-			{ light.intensity = lightIntensity * (relativeTime / quarterDay); }
+			if (GetComponent<Light>() != null)
+			{ GetComponent<Light>().intensity = lightIntensity * (relativeTime / quarterDay); }
 		}
 		else if(currentPhase == DayPhase.Day)
 		{
 			//float relativeTime = currentCycleTime - dayTime;
 			RenderSettings.ambientLight = fullLight;
-			if (light != null)
-			{ light.intensity = lightIntensity; }
+			if (GetComponent<Light>() != null)
+			{ GetComponent<Light>().intensity = lightIntensity; }
 		}
 
 		else if (currentPhase == DayPhase.Dusk)
 		{
 			float relativeTime = currentCycleTime - duskTime;
 			RenderSettings.ambientLight = Color.Lerp(fullLight, fullDark, relativeTime / quarterDay);
-			if (light != null)
-			{ light.intensity = lightIntensity * ((quarterDay - relativeTime) / quarterDay); }
+			if (GetComponent<Light>() != null)
+			{ GetComponent<Light>().intensity = lightIntensity * ((quarterDay - relativeTime) / quarterDay); }
 		}
 		else if (currentPhase == DayPhase.Night) 
 		{
 			//float relativeTime = currentCycleTime - nightTime;
 			RenderSettings.ambientLight = fullDark;
-			if (light != null)
-			{ light.intensity = 0.0f; }
+			if (GetComponent<Light>() != null)
+			{ GetComponent<Light>().intensity = 0.0f; }
 		}
 
 		transform.Rotate(Vector3.right * ((Time.deltaTime / dayCycleLength) * 360.0f), Space.Self);
