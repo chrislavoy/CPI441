@@ -2,49 +2,66 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+//[ExecuteInEditMode]
 public class TimeOfDay : MonoBehaviour
 {
-	public bool lightChanges;
 	public bool timeChanges;
-	public float dayLength;
-	
-	public float currentTime;
-	public int currentHour;
-	private Light sun;
-	
-	void Start () 
+	public bool lightChanges;
+	public float dayLength; // How long a day is in seconds
+	public float currentHour; // Current hour of the day (currentTime % dayLength)
+
+	private float totalHours = 24.0f; // How many hours are in a day
+	//private int dawnOffset = 6;// Move the clock forward to adjust rotation of the sun
+	private float currentTime; // Current time of day in seconds
+	private float dayRatio; // Represents (from 0 to 1) the current time of day
+	private Light Sun; // Directional light component added to the parent game object;
+
+	void Start()
 	{
-		sun = GetComponent<Light>();
-		currentTime = (transform.rotation.x / 360.0f) * 24.0f + (;
+		// Make sure currentHour isn't creater than the totalHours
+		Mathf.Clamp(currentHour, 0.0f, totalHours);
+
+		// Set initial dayRatio
+		dayRatio = currentHour / totalHours;
+
+		// Set the current time in seconds;
+		currentTime = dayRatio * dayLength;
+
+		// Set the Sun's rotation
+		Sun = GetComponent<Light>();
+		transform.eulerAngles = new Vector3((dayRatio * 360.0f) - 90.0f, 30.0f, 0.0f);
 	}
 
-	void Update () 
+	void Update()
 	{
 		if (timeChanges) 
 		{
 			currentTime += Time.deltaTime;
-			//currentTime = currentTime % dayLength;
-
-			currentHour = (int)(Mathf.Ceil((currentTime / dayLength) * 24.0f) % 24.0f);
-			//currentHour = (int) currentTime / (int)dayLength;
-			Mathf.Clamp(currentHour, 0, 24);
-		}
-
-		if (lightChanges) 
-		{
-			transform.Rotate(Vector3.right * ((Time.deltaTime / dayLength) * 360.0f), Space.Self);
-
-			if (currentHour >= 7 && currentHour <= 18) 
+			if (currentTime >= dayLength)
 			{
-				sun.intensity = Mathf.Lerp(0.0f, 1.0f, Time.time);
-				RenderSettings.fog = true;
-				RenderSettings.ambientIntensity = Mathf.Lerp(0.5f, 1.0f, Time.time);
+				currentTime = 0.0f;
 			}
-			else
+			currentHour = (int)(Mathf.Ceil((currentTime / dayLength) * 24.0f) % 24.0f);
+			Mathf.Clamp(currentHour, 0.0f, 24.0f);
+			dayRatio = currentTime / dayLength;  // Changes to seconds to be more precise
+			Mathf.Clamp(dayRatio, 0.0f, 1.0f);
+
+			if (lightChanges) 
 			{
-				sun.intensity = Mathf.Lerp(1.0f, 0.0f, Time.time);
-				RenderSettings.fog = false;
-				RenderSettings.ambientIntensity = Mathf.Lerp(1.0f, 0.5f, Time.time);
+				transform.eulerAngles = new Vector3((dayRatio * 360.0f) - 90.0f, 30.0f, 0.0f);
+
+				if (currentHour >= 7.0f && currentHour <= 18.0f) 
+				{
+					Sun.intensity = Mathf.Lerp(0.0f, 1.0f, Time.time);
+					RenderSettings.fog = true;
+					RenderSettings.ambientIntensity = Mathf.Lerp(0.5f, 1.0f, Time.time);
+				}
+				else
+				{
+					Sun.intensity = Mathf.Lerp(1.0f, 0.0f, Time.time);
+					RenderSettings.fog = false;
+					RenderSettings.ambientIntensity = Mathf.Lerp(1.0f, 0.5f, Time.time);
+				}
 			}
 		}
 	}
